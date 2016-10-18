@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <title>HPE</title>
+    <meta name="viewport" content="width=170, initial-scale=1">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--script type="text/javascript" src="HPQ.js"></script-->
+    <script>
+      var updateMins = 1;
+      var priceHPE, priceHPQ, rate, valueHPE, valueHPQ;
+      var sharesHPE = localStorage.getItem("sharesHPE") || 1;
+      var sharesHPQ = localStorage.getItem("sharesHPQ") || 1;
+
+      $(window).load(function(){
+        $.ajaxSetup({ cache: false });
+        $("#sharesHPE").val(sharesHPE);
+        $("#sharesHPQ").val(sharesHPQ);
+        $("#sharesHPE,#sharesHPQ").on("change keyup", function() {
+          sharesHPE = $("#sharesHPE").val();
+          sharesHPQ = $("#sharesHPQ").val();
+          doIt();
+        }).change();
+      });
+
+
+      function doIt() {
+        localStorage.setItem("sharesHPE", sharesHPE);
+        localStorage.setItem("sharesHPQ", sharesHPQ);
+        $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/HPQ?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+          priceHPQ = data.query.results.quote.LastTradePriceOnly;
+          $("#priceHPQ").html(formatMoney(priceHPQ));
+          $("#changeHPQ").html(formatMoney(data.query.results.quote.Change, ""));
+          $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/HPE?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+            priceHPE = data.query.results.quote.LastTradePriceOnly;
+            $("#priceHPE").html(formatMoney(priceHPE));
+            $("#changeHPE").html(formatMoney(data.query.results.quote.Change, ""));
+            $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/USD?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+              rate = data.query.results.rate.Rate;
+              $("#rate").html(formatMoney(rate, "€", 3));
+              valueHPQ = priceHPQ * rate;
+              valueHPE = priceHPE * rate;
+              value = (valueHPQ * sharesHPQ) + (valueHPE * sharesHPE);
+              console.log(value);
+              $("#value").removeClass().addClass("total").html(formatMoney(value, "€"));
+            })
+          })
+        })
+        t = window.setTimeout(doIt, 1000*60*updateMins);
+      }
+
+      function formatMoney(number, symbol, precision) {
+        var symbol = (toString.call(symbol) === '[object String]') ? symbol : "$";
+        var precision = precision || 2;
+        var thousand = ",";
+        var decimal = ".";
+        var format = {
+                pos : "<div class='pos'><span class='curr'>%s</span>%v</div>",
+                neg : "<div class='neg'><span class='curr'>%s</span>%v</div>",
+                zero: "<span class='curr'>%s</span>-- "
+        } 
+        useFormat = number > 0 ? format.pos : number < 0 ? format.neg : format.zero;
+
+        base = parseInt(toFixed(Math.abs(number || 0), precision), 10) + "",
+        mod = base.length > 3 ? base.length % 3 : 0;
+
+        fixedNr = toFixed(Math.abs(number), precision);
+        cleanNr = (mod ? base.substr(0, mod) + thousand : "") + base.substr(mod).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (precision ? decimal + fixedNr.split('.')[1] : "");
+
+        return useFormat.replace('%s', symbol).replace('%v', cleanNr);
+      };
+
+
+      function toFixed(value, precision) {
+        var power = Math.pow(10, precision);
+        return (Math.round(value * power) / power).toFixed(precision);
+      };
+
+    </script>
+    <!--link rel="stylesheet" type="text/css" href="HPQ.css"/-->
+    <!--link rel="stylesheet" type="text/css" href="https://www.hpe.com/etc/clientlibs/hpeweb/css/hpe-global.min.css"/-->
+    <link rel="icon" type="image/png" href="hpe.png"/>
+    <link rel="mask-icon" color="#4987CE" href="HPE.svg"/>
+    <style>
+      @font-face{font-family:'Metric Regular';src:url(fonts/MetricWeb-Regular.eot);src:url(fonts/MetricWeb-Regular.woff) format('woff'),url(fonts/MetricWeb-Regular.ttf) format('truetype');font-weight:400;font-style:normal;font-stretch:normal}
+      @font-face{font-family:'Metric Semibold';src:url(fonts/MetricWeb-Semibold.eot);src:url(fonts/MetricWeb-semibold.woff) format('woff'),url(fonts/MetricWeb-Semibold.ttf) format('truetype');font-weight:400;font-style:normal;font-stretch:normal}
+      body {
+        margin:0;
+        padding: 20px;
+      }
+      dl {
+        width: 320px;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+        display: inline;
+      }
+      dt, dd, dd input {
+       font-family: 'Metric Regular', Arial;
+       line-height: 48px;
+       height: 52px;
+       text-align: right;
+       vertical-align: bottom;
+      }
+      dt {
+       float: left;
+       width: 140px;
+       font-size: 22px;
+      }
+      dd {
+       -webkit-margin-start: 140px;
+       width: 180px;
+      }
+      dd, dd input {
+       font-size: 36px;
+      }
+      dd input {
+       border: none;
+       padding: 0;
+      }
+      .total {
+       border-top: solid 1px #333;
+       font-family: 'Metric Semibold', Arial;
+       font-weight: bold;
+      }
+      .k0 {
+       color: rgb(240, 83, 50);
+      }
+      .k1 {
+       color: rgb(130, 41, 128);
+      }
+      .k2 {
+       color: rgb(0, 150, 214);
+      }
+      .change div {
+        background-size: 24px;
+        background-repeat: no-repeat;
+        background-position: 80px 12px;
+      }
+      .change div.pos {
+        background-image: url('up.png');
+        color: rgb(0,139,43);
+      }
+      .change div.neg {
+        background-image: url('down.png');
+        color: rgb(240,83,50);
+      }
+      .curr {
+        margin-right: 10px;
+        font-size: 28px;
+        line-height: 36px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <dl>
+      <dt>Shares HPE</dt>
+      <dd><input id="sharesHPE" type="number" value="1" min="0" max="50000" pattern="\d*" /></dd>
+      <dt>Price HPE</dt>
+      <dd id="priceHPE">&nbsp;</dd>
+      <dt>Change HPE</dt>
+      <dd id="changeHPE" class="change">&nbsp;</dd>
+      <dd></dd>
+      <dt>Shares HPI</dt>
+      <dd><input id="sharesHPQ" type="number" value="1" min="0" max="50000" pattern="\d*" /></dd>
+      <dt>Price HPI</dt>
+      <dd id="priceHPQ">&nbsp;</dd>
+      <dt>Change HPQ</dt>
+      <dd id="changeHPQ" class="change">&nbsp;</dd>
+      <dd></dd>
+      <dt>Conv rate</dt>
+      <dd id="rate">&nbsp;</dd>
+      <dt class="total">Total value</dt>
+      <dd id="value" class="total">&nbsp;</dd>
+    </dl>
+  </body>
+</html>
