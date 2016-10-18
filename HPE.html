@@ -20,11 +20,11 @@
 
       function doIt() {
         localStorage.setItem("sharesHPE", sharesHPE);
-        $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/HPE?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+        $.getJSON("//query.yahooapis.com/v1/public/yql/melledewit/HPE?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
           priceHPE = data.query.results.quote.LastTradePriceOnly;
           $("#priceHPE").html(formatMoney(priceHPE));
           $("#changeHPE").html(formatMoney(data.query.results.quote.Change, ""));
-          $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/USD?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+          $.getJSON("//query.yahooapis.com/v1/public/yql/melledewit/USD?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
             rate = data.query.results.rate.Rate;
             $("#rate").html(formatMoney(rate, "€", 3));
             valueHPE = priceHPE * rate;
