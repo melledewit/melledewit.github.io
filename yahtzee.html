@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <script type="text/javascript" src="//code.jquery.com/jquery-git.js"></script>
+  <style type="text/css">
+    * {
+    font-family: Tahoma;
+    font-size: 0.95em;
+}
+ul.die, ul.die li {
+    display:  inline;
+    list-style-type: none;
+}
+.d0,.d1,.d2,.d3,.d4,.d5,.d6 {
+    width: 21px;
+    height: 21px;
+    display: inline-block;
+    clear: none;
+    margin: 2px;
+}
+.die div[checked] {
+    border-radius: 5px;
+    border: 2px solid green;
+    margin: 0;
+    background-color:green;
+    opacity:0.7;
+}
+input[type=text] {
+    border: none;
+    width:  50px;
+    text-align: right;
+}
+input[type=text].total {
+    font-weight: bold;
+}
+div.d0 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM9JREFUeNrklU0KgzAQhSeSo7joNaQHUNpzFjxOF66kC7uP8d/RJyiltP5OV30wmyw+vhcmRDEzXYOASSi3MFR08X2u61pkyrLks+exlrBrmoZ6IOV5To84pkPQqqomWG86nesjsCzLBsv36K01YfUNtgnati0VRTHAYLmURehYE4Zro+fsALLWzlZdDUVFwLbYzUJRFcDXFdkNRV0A0zQlPN0j0eOqwA4jEQ07Y8zu+/sU55kkosABijuUjkM/yJ9DFRb95Lpif9Q9ilQnwADsKOLb+99j4QAAAABJRU5ErkJggg%3D%3D)
+}
+div.d1 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAShJREFUeNrklTuKg1AUho9BK3sb2xRZgQsIg40gkYCV+7FxBW5AGBCyAys3YJUiVZgiUwm+33c4F0aIEL0Sp5ofLtwHfPz/OQcuRwiB8+lEYCP5lwvHI/DT9zcBDsMAH8cj4beA9X0PTdNAVVXwdb/DW9C2bUdY13XjPf8OrCxL6nIqfm1MdPUKtgqKDajrmsLQ5ZIWob8x0SGrdnPuiqKAOI7BcRwwTRNc12WC8q8agUB053ke2LZN78MwBFmWQdO0dU4xapIkY9woip7ep+dZKMbN8xzSNH2aOcMwQBAEuhdFEXRdZ4uP44FxcU2lKAqNHQQBqKoKkiQtQzFulmWz3cU6WpbF3v3vx2PVuDBBsY5bawd/oH8O5fCPOuz3m/1R19uN+xFgAFols7oIMKq5AAAAAElFTkSuQmCC);
+}
+div.d2 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWFJREFUeNq0lcGKglAYhY9hK/chtG0xT9A+BtoEVg646iV8ihZu3di2nTAQvUAg9AKuZtEqZtEsU7Mo9U6/YIzajFrOAUGu149z/3NEjjGGt9GIoSa9LxYc5OGQBUFQy3U+n9lrr8f4OtyFYYgrEKfTCZ/bLZ6CXi6XG+zq9LbeeMSVYRiQZRmapsHzvBSQxFcFzudzqKoaO1wulxBFEYPBILWvlNMoinA8HrHf72FZVgxMZNt2bn8hlACu68JxnHiG4/EYzWYzfiYIAiRJyr3D/+WOAvB9Pz52om63i/V6jdVqhX6/j1arVQ5KjghG0Htqt9uYTCa/ni4HpdkRMJtoFfHZMA6HA+jTfUaNpCoESzqn6zoURcFsNnvMKbkjWDI/0zQxnU7jewqE5pftYaHTr90uFUi2d/d6WAilY/9UmR6WDqpKDytDy/SwVPp161+gHBX9pdOp7R/1sdlw3wIMADuuE0yi2CW3AAAAAElFTkSuQmCC)
+}
+div.d3 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXtJREFUeNq0lb2KwkAUhU9EK/s0aS32ASS9LKRR/NmFFMEn8QVsLK3SBgkEAr5AsPIFrLawki1cm+C/mJjRGzAYjSZq9sAUM3c4nHu/geEYY/iu1xlSktnvc/iq1Zjruqms/X7PPksllk0j3eFwwMkQu90Ov5MJsq+aaJqGwWCAYrEIRVFwShrUXzI1TROtVgu2baPX6yGfz6NcLgf1zLMJ1+s1LMvCbDaD4zj++Wg0Ct1LZOp5HrbbLebzOVarFSqVCnK5nF+jlNVqNXQ/tn0CQIYE4SxRFDEcDv2ZSpIEnueTJaV0m83Gn1un04Esy1BVNagLgoBms3ljeDcpzYoMKZ2u62i32/45pSOzSyhRuklKrS4Wi6DdawjX+4em1C6RXS6XoTfXaDQeQolS9vxUqF1a14qDEpmU2qVnQoZk3u12n4ISmfRvOg3mZxjG01Aik9Ic70FIAiWW/itQ7oJ6B0qs6SWUd5TBP4ijP+qjUEjtj/oZj7mjAAMAFLki4Iq6qsUAAAAASUVORK5CYII%3D)
+}
+div.d4 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAbhJREFUeNq0VbtqAkEUPStaiKXgDygklUgQK1FMUCxE3QQs9JcsrWwFi8CirYURBAVbG1NYSWzsBF/4mswd2M2Oj8XEzYELO7OXs+c+DqswxvCWzzPYBK3ZVPCay7H9fm9LbLdb9pJIMKcd6g6HAzghNpsNviYTOE9f1mo1DAYDRKNRlEqlqySU1+l0EA6HUSwWwZX+JJjL1zSNhUIhI1qt1sUy6/U68/l8zOVy0SxYtVpl0+lUxIPfzxxmBaPRCFZnUrhcLtFutzGbzbDb7cT9cDiU8iTSdDoN/nXx7Ha7kUwmxfPxeMR6vcZ8PsdisUAmkzHyPB4PstmsRCr1lJeMRqOBfr+PeDwOr9crBkCENAQdkUgEvV5P9DSVSoG3QiJVqKfvmnY2DFJHRKvVSpR9K55jMVxcKeoVkZnV/QZnpFQqEUor8ldSfRg0XbLuPXDqq0LqKOyAg9TRmugDqVQqKBQK4AttaUvLvKdg0HBDuVwWDtHD7BRzWOUJR1EPdZw64/R8a57kKFVVLZ1ya55Ccj+6XeOCl3DVKWZcy6PlPyO9F0TqwD9AoUV/DARs+0d9jsfKtwADAInsmXiZyDihAAAAAElFTkSuQmCC)
+}
+div.d5 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAdxJREFUeNqslU2LQWEUx/9XLGSppCypmaWFrER5S5EwZYG1D+EL+AJWtpJSYmFrlKJkZ2MWs9IsjI28y9sd5yk393JdTffUrefl379zzu/cHo7neXzEYjxUilqjwWnJsFqrqWJ4Pp/h93p5rRpmp9MJ+/0eu90OP+MxtNLLUqmEfr8Pl8uFdDota0K6drsNh8OBVCqF4/Eo3ItMm80mCoUCWw8GA5jNZvh8vvu+XdqVy+Uwm81QLpdhMBgQDoeFe82teDQa4dmeMlyv12i1WphOpzgcDux8OByKdCLTUCgEnU7H1nq9HoFAQACw3W4xn8+xWq0QiUQEHWUZjUZFpqLy7XY76vU6er0ePB4PjEYjA0CGBOEaTqcT3W6X9TQYDMJkMsmbUlAfE4kEy26z2WC5XLI+dzod+P1+ZLNZprNYLMhkMg9BPhwp6hUZUnaVSgX5fJ6dU3ZkdgvlUWikB1TqYrEQypVCkO6fmlK5RJbKvZ25eDz+FIps+TQqVC590lCC8jBTKpfGhAzJnKAkk0kUi0VBdIVyNZTTCZn+TiZC/6rV6ktQlHQa6qMcBDkoSjoR/VehKOm0/4GipOPerFb+8/K3qBVet/t++NUIjt6od5tNtTfq6/ub+xNgAIylG1tHL9s5AAAAAElFTkSuQmCC)
+}
+div.d6 {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAdZJREFUeNqslT1rAkEQht8LWoilYGOZQCwtRBBEMUERFKNJpz/IP2BlK1gI4iEWihhBVLC1MUUqUTBi4/e3m5sFTU5jPOEGFvZ2Z9+dmed2V2CM4S0UYlDJMqIo4PXlhW23W1Xaer1mz24306gR3W63gySI5XKJbqcDzelkMplEs9mEw+FANBq9KEJ+lUoFVqsVkUgEUqQ/Dr/Tz2QyzGKxHFuxWPwzzVQqxYxGI9NqtcSCJRIJ1uv1eHu8v2d3vyNot9v475sinM1mKJfLGAwG2Gw2fLzVasn8ZKI+nw/S7ryv0+ng8Xh4f7/fY7FYYDQaYTqdIhAIHP30ej2CwaBMVFZTKWVks1k0Gg24XC4YDAYOgAQJwsFsNhvq9TqvqdfrhVSKy5FSeoVCAaVSCfl8HvP5HOPxWCZ48KPNc7kcRFE8AymLlITi8TgmkwnS6TRf7Pf7zxbRXCwW432K2GQyyfzOQA2HQ3S7XV6/UwAHOx2/CIpg2O12TnW1Wv0J4GDhcPg6KEqT6mc2m1Gr1S4CUAyKyNJvQqLXACgG9dXvH+leA6AYFJ0QpQBuBqUEwE2glAJQ6ifQrfJerap18ePJ6ZSnr5YJ9EaZHx5Ue6M+Pj+FbwEGAAFKoPNu/kczAAAAAElFTkSuQmCC)
+}
+  </style>
+  <title>Yahtzee</title>
+  <script type='text/javascript'>//<![CDATA[
+
+var x = 0;
+
+$(document).ready(function() {
+    $("input[type=text]").attr("disabled", true)
+    $(".die div").bind("click", function() {
+        if ($(this).attr("checked")) {
+            $(this).removeAttr("checked");
+        }
+        else if (parseInt($(this).attr("alt")) > 0 && x != 3) {
+            $(this).attr("checked", "true");
+        }
+    });
+});
+
+function rollDie() {
+    if (x == 0) {
+        $(".die div").removeClass().removeAttr("checked");
+    }
+    if (x == 3) {
+        $(".die div").removeAttr("checked");
+        alert("Please select where you would like your score.");
+        return;
+    }
+
+    x++;
+
+    $("#rollButton").attr("value", "Roll " + x);
+
+    for (i = 1; i < 6; i++) {
+        if ($("#dice" + i + "[checked]").length == 0 || x == 1) {
+            num = Math.ceil(Math.random() * 6);
+            $("#dice" + i).removeClass().addClass("d" + num).attr("alt", num);
+        }
+    }
+}
+
+function checkDie(dice) {
+    if (x == 0) {
+        $(event.target).attr("checked", false);
+        return;
+    }
+    $(event.target).attr("disabled", "true")
+    x = 0;
+    $("#rollButton").val("New Roll")
+    score = new Array();
+    for (i = 1; i < 6; i++) {
+        score[i - 1] = $("#dice" + i).attr("alt");
+    }
+    s = score.toString();
+    var y = $.unique(score).sort().toString().replace(/,/g, "");
+    points = 0;
+    switch (dice) {
+    case (1):
+    case (2):
+    case (3):
+    case (4):
+    case (5):
+    case (6):
+        points = $(".die div[alt=" + dice + "]").length * dice;
+        break;
+    case ("3k"):
+    case ("4k"):
+    case ("5k"):
+        for (i = 1; i < 6; i++) {
+            var substrings = s.split(i);
+            var y = substrings.length - 1;
+            if ((dice == "5k") && (y == 5)) {
+                points = 50;
+            }
+            else if (y >= parseInt(dice.substring(0, 1))) {
+                points = 0;
+                $(".die div").each(function() {
+                    points += parseInt($(this).attr("alt"))
+                });
+            }
+        }
+        break;
+    case ("fh"):
+        for (i = 1; i < 6; i++) {
+            var substrings = s.split(i);
+            var b = substrings.length - 1;
+            var y = substrings.length - 1;
+            if ((b >= 3) && (y >= 2)) {
+                points = 25;
+            }
+        }
+        break;
+    case ("ss"):
+        if (y.match(/1234/) || y.match(/2345/) || y.match(/3456/)) {
+            points = 30;
+        }
+        break;
+    case ("ls"):
+        if (y.match(/12345/) || y.match(/23456/)) {
+            points = 40;
+        }
+        break;
+    case ("chance"):
+        $(".die div").each(function() {
+            points += parseInt($(this).attr("alt"))
+        });
+        break;
+    }
+    $("#type" + dice).val(points);
+    totals();
+}
+
+function totals() {
+    points = 0;
+    $("input[type=text].top").each(function() {
+        points += parseInt($(this).val())
+    })
+    $("#subTotalsTop").val(points);
+    if (points >= 63) {
+        $("#bonus").val(35);
+    }
+
+    points = 0;
+    $("input[type=text].bottom").each(function() {
+        points += parseInt($(this).val())
+    })
+    $("#subTotalsBottom").val(points);
+
+    $("#grandTotal").val(parseInt($("#subTotalsTop").val()) + parseInt($("#subTotalsBottom").val()) + parseInt($("#bonus").val()));
+
+    if ($("input[name=select]:checked").length == $("input[name=select]").length) {
+        if (confirm("Game Over!\nYour Final Score is " + $("#grandTotal").val() + "\nWould you like to play again?")) {
+            newGame();
+        }
+    }
+}
+
+function newGame() {
+    x = 0;
+    $("input[type=text]").val(0);
+    $(".die div").removeClass().addClass("d0").removeAttr("checked").removeAttr("alt");
+    $("input:checkbox").removeAttr("disabled").removeAttr("checked");
+    $("#rollButton").val("Roll the Die")
+}
+//]]> 
+
+</script>
+
+  
+</head>
+
+<body>
+  <ul class="die">
+    <li><div class="d0" id="dice1"></div></li>
+    <li><div class="d0" id="dice2"></div></li>
+    <li><div class="d0" id="dice3"></div></li>
+    <li><div class="d0" id="dice4"></div></li>
+    <li><div class="d0" id="dice5"></div></li>
+</ul>
+<br />
+<ul class="die">
+    <li><input type="button" id="rollButton" onclick="rollDie()" value="Roll the Die" /></li>
+    <li><input type="button" id="resetButton" onclick="newGame()" value="Reset" /></li>
+</ul>
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td>ONES</td>
+        <td><input type="checkbox" name="select" onclick="checkDie(1)"></td>
+        <td><div class="d1"></div><div class="d1"></div><div class="d1"></div></td>
+        <td><input type="text" id="type1" value="0" class="top" /></td>
+    </tr>
+    <tr>
+        <td>TWOS</td>
+        <td><input type="checkbox" name="select" onclick="checkDie(2)"></td>
+        <td><div class="d2"></div><div class="d2"></div><div class="d2"></div></td>
+        <td><input type="text" id="type2" value="0" class="top"></td>
+    </tr>
+    <tr>
+        <td>THREES</td>
+        <td><input type="checkbox" name="select" onclick="checkDie(3)"></td>
+        <td><div class="d3"></div><div class="d3"></div><div class="d3"></div></td>
+        <td><input type="text" id="type3" value="0" class="top"></td>
+    </tr>
+    <tr>
+        <td>FOURS</td>
+        <td><input type="checkbox" name="select" onclick="checkDie(4)"></td>
+        <td><div class="d4"></div><div class="d4"></div><div class="d4"></div></td>
+        <td><input type="text" id="type4" value="0" class="top"></td>
+    </tr>
+    <tr>
+        <td>FIVES</td>
+        <td><input type="checkbox" name="select" onclick="checkDie(5)"></td>
+        <td><div class="d5"></div><div class="d5"></div><div class="d5"></div></td>
+        <td><input type="text" id="type5" value="0" class="top"></td>
+    </tr>
+    <tr>
+        <td>SIXES</td>
+        <td><input type="checkbox" name="select" onclick="checkDie(6)"></td>
+        <td><div class="d6"></div><div class="d6"></div><div class="d6"></div></td>
+        <td><input type="text" id="type6" value="0" class="top"></td>
+    </tr>
+    <tr>
+        <td colspan="3">Top Subtotal</td>
+        <td><input type="text" id="subTotalsTop" value="0" class="total"></td>
+    </tr>
+    <tr>
+        <td colspan="3">Bonus</td>
+        <td><input type="text" value="0" id="bonus"></td>
+    </tr>
+    <tr>
+        <td>3 OF A KIND</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('3k')"></td>
+        <td><div class="d3"></div><div class="d3"></div><div class="d3"></div><div class="d0"></div><div class="d0"></div></td>
+        <td><input type="text" id="type3k" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td>4 OF A KIND</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('4k')"></td>
+        <td><div class="d4"></div><div class="d4"></div><div class="d4"></div><div class="d4"></div><div class="d0"></div></td>
+        <td><input type="text" id="type4k" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td>FULL HOUSE</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('fh')"></td>
+        <td><div class="d3"></div><div class="d3"></div><div class="d3"></div><div class="d2"></div><div class="d2"></div></td>
+        <td><input type="text" id="typefh" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td>SM. STRAIGHT</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('ss')"></td>
+        <td><div class="d1"></div><div class="d2"></div><div class="d3"></div><div class="d4"></div><div class="d0"></div></td>
+        <td><input type="text" id="typess" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td>LG STRAIGHT</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('ls')"></td>
+        <td><div class="d1"></div><div class="d2"></div><div class="d3"></div><div class="d4"></div><div class="d5"></div></td>
+        <td><input type="text" id="typels" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td>YAHTZEE</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('5k')"></td>
+        <td><div class="d1"></div><div class="d1"></div><div class="d1"></div><div class="d1"></div><div class="d1"></div></td>
+        <td><input type="text" id="type5k" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td>CHANCE</td>
+        <td><input type="checkbox" name="select" onclick="checkDie('chance')"></td>
+        <td><div class="d1"></div><div class="d3"></div><div class="d1"></div><div class="d5"></div><div class="d2"></div></td>
+        <td><input type="text" id="typechance" value="0" class="bottom"></td>
+    </tr>
+    <tr>
+        <td colspan="3">Bottom Subtotal</td>
+        <td><input type="text" id="subTotalsBottom" value="0" class="total"></td>
+    </tr>
+    <tr>
+        <td colspan="3">GrandTotal</td>
+        <td><input type="text" id="grandTotal" value="0" class="total"></td>
+    </tr>
+</table>
+  
+</body>
+
+</html>
