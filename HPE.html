@@ -2,21 +2,17 @@
   <head>
     <title>HPE</title>
     <meta name="viewport" content="width=170, initial-scale=1">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <!--script type="text/javascript" src="HPQ.js"></script-->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>
       var updateMins = 1;
-      var priceHPE, priceHPQ, rate, valueHPE, valueHPQ;
+      var priceHPE, rate, valueHPE;
       var sharesHPE = localStorage.getItem("sharesHPE") || 1;
-      var sharesHPQ = localStorage.getItem("sharesHPQ") || 1;
 
       $(window).load(function(){
         $.ajaxSetup({ cache: false });
         $("#sharesHPE").val(sharesHPE);
-        $("#sharesHPQ").val(sharesHPQ);
-        $("#sharesHPE,#sharesHPQ").on("change keyup", function() {
+        $("#sharesHPE").on("change keyup", function() {
           sharesHPE = $("#sharesHPE").val();
-          sharesHPQ = $("#sharesHPQ").val();
           doIt();
         }).change();
       });
@@ -24,24 +20,16 @@
 
       function doIt() {
         localStorage.setItem("sharesHPE", sharesHPE);
-        localStorage.setItem("sharesHPQ", sharesHPQ);
-        $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/HPQ?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
-          priceHPQ = data.query.results.quote.LastTradePriceOnly;
-          $("#priceHPQ").html(formatMoney(priceHPQ));
-          $("#changeHPQ").html(formatMoney(data.query.results.quote.Change, ""));
-          $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/HPE?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
-            priceHPE = data.query.results.quote.LastTradePriceOnly;
-            $("#priceHPE").html(formatMoney(priceHPE));
-            $("#changeHPE").html(formatMoney(data.query.results.quote.Change, ""));
-            $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/USD?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
-              rate = data.query.results.rate.Rate;
-              $("#rate").html(formatMoney(rate, "€", 3));
-              valueHPQ = priceHPQ * rate;
-              valueHPE = priceHPE * rate;
-              value = (valueHPQ * sharesHPQ) + (valueHPE * sharesHPE);
-              console.log(value);
-              $("#value").removeClass().addClass("total").html(formatMoney(value, "€"));
-            })
+        $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/HPE?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+          priceHPE = data.query.results.quote.LastTradePriceOnly;
+          $("#priceHPE").html(formatMoney(priceHPE));
+          $("#changeHPE").html(formatMoney(data.query.results.quote.Change, ""));
+          $.getJSON("http://query.yahooapis.com/v1/public/yql/melledewit/USD?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
+            rate = data.query.results.rate.Rate;
+            $("#rate").html(formatMoney(rate, "€", 3));
+            valueHPE = priceHPE * rate;
+            value = (valueHPE * sharesHPE);
+            $("#value").removeClass().addClass("total").html(formatMoney(value, "€"));
           })
         })
         t = window.setTimeout(doIt, 1000*60*updateMins);
@@ -159,13 +147,6 @@
       <dd id="priceHPE">&nbsp;</dd>
       <dt>Change HPE</dt>
       <dd id="changeHPE" class="change">&nbsp;</dd>
-      <dd></dd>
-      <dt>Shares HPI</dt>
-      <dd><input id="sharesHPQ" type="number" value="1" min="0" max="50000" pattern="\d*" /></dd>
-      <dt>Price HPI</dt>
-      <dd id="priceHPQ">&nbsp;</dd>
-      <dt>Change HPQ</dt>
-      <dd id="changeHPQ" class="change">&nbsp;</dd>
       <dd></dd>
       <dt>Conv rate</dt>
       <dd id="rate">&nbsp;</dd>
