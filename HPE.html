@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=170, initial-scale=1">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>
+      var t = false;
       var updateMins = 1;
       var priceHPE, rate, valueHPE;
       var sharesHPE = localStorage.getItem("sharesHPE") || 1;
@@ -19,6 +20,7 @@
 
 
       function doIt() {
+        if (t) window.clearTimeout(t);
         localStorage.setItem("sharesHPE", sharesHPE);
         $.getJSON("//query.yahooapis.com/v1/public/yql/melledewit/HPE?env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function(data) {
           priceHPE = data.query.results.quote.LastTradePriceOnly;
